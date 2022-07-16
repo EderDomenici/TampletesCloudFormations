@@ -39,7 +39,7 @@ Resources:
 
   VPC:
     Type: "AWS::ec2::VPC"
-    Propeterties:
+    Properties:
       EnableDnsSupport: 'true'
       EnableDnsHostname: 'true'
       CidrBlock:
@@ -62,9 +62,9 @@ Resources:
 
 
 
-     PublicSubnet0:
+    PublicSubnet0:
       Type: "AWS::EC2::Subnet"
-      Propeterties:
+      Properties:
         VPCId:
           Ref: "VPC"
         AvailabilityZone:
@@ -84,11 +84,10 @@ Resources:
             - - !Ref "VPCName"
               - '-public-'
               - !Select [0, !FindInMap ["AZRegions", !Ref "AWS::Region", "AZs"] ]
-
 
     PublicSubnet1:
       Type: "AWS::EC2::Subnet"
-      Propeterties:
+      Properties:
         VPCId:
           Ref: "VPC"
         AvailabilityZone:
@@ -109,10 +108,9 @@ Resources:
               - '-public-'
               - !Select [0, !FindInMap ["AZRegions", !Ref "AWS::Region", "AZs"] ]
 
-
     PrivateSubnet0:
       Type: "AWS::EC2::Subnet"
-      Propeterties:
+      Properties:
         VPCId:
           Ref: "VPC"
         AvailabilityZone:
@@ -133,11 +131,9 @@ Resources:
               - '-private-'
               - !Select [0, !FindInMap ["AZRegions", !Ref "AWS::Region", "AZs"] ]
 
-
-
-     PrivateSubnet1:
+    PrivateSubnet1:
       Type: "AWS::EC2::Subnet"
-      Propeterties:
+      Properties:
         VPCId:
           Ref: "VPC"
         AvailabilityZone:
@@ -158,10 +154,28 @@ Resources:
               - '-private-'
               - !Select [0, !FindInMap ["AZRegions", !Ref "AWS::Region", "AZs"] ]
 
+    InternetGateway:
+      Type: AWS::EC2::InternetGateway
+      Properties:
+         Tags: -
+          Key: "Application"
+          Value:
+            Ref: AWS::StackName
+         -
+          Key: "Network"
+          Value: "2 Tier VPC"
+         -
+         Key: "Name"
+         Value:
+            Ref: "VPCName"
 
-
-
-
+    GatewatTointernet:
+      Type: "AWS::EC2::VPCGatewayAttachment"
+      Properties:
+        VPCId:
+          Ref: "VPC"
+      InternetGateway:
+        Ref: "InternetGateway"    
 
 
 
